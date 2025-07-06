@@ -3,14 +3,36 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
+
 exports.register = async (req, res) => {
-  const { name, email, password } = req.body;
-  const hash = await bcrypt.hash(password, 10);
-  db.query('INSERT INTO users (name, email, password) VALUES (?, ?, ?)', [name, email, hash], (err) => {
-    if (err) return res.status(400).json({ error: 'Email already exists' });
-    res.json({ message: 'User registered' });
-  });
+  try {
+    const { name, email, password } = req.body;
+    const hash = await bcrypt.hash(password, 10);
+    db.query(
+      'INSERT INTO users (name, email, password) VALUES (?, ?, ?)',
+      [name, email, hash],
+      (err) => {
+        if (err) {
+          console.error('[DB ERROR]', err);
+          return res.status(400).json({ error: 'Email already exists or DB error' });
+        }
+        res.json({ message: 'User registered' });
+      }
+    );
+  } catch (e) {
+    console.error('[REGISTER ERROR]', e);
+    res.status(500).json({ error: 'Server error' });
+  }
 };
+
+// exports.register = async (req, res) => {
+//   const { name, email, password } = req.body;
+//   const hash = await bcrypt.hash(password, 10);
+//   db.query('INSERT INTO users (name, email, password) VALUES (?, ?, ?)', [name, email, hash], (err) => {
+//     if (err) return res.status(400).json({ error: 'Email already exists' });
+//     res.json({ message: 'User registered' });
+//   });
+// };
 
 // exports.login = (req, res) => {
 //   const { email, password } = req.body;

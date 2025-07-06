@@ -14,8 +14,8 @@ app.use('/api', employeeRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error('Error:', err.stack);
-  res.status(500).json({ error: 'Internal Server Error' });
+  console.error('[ERROR]', err.stack); // this shows up in Render logs
+  res.status(500).json({ error: 'Something went wrong' });
 });
 
 app.listen(3000, () => {
