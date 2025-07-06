@@ -43,4 +43,4 @@ pool.getConnection((err, connection) => {
   }
 });
 
-module.exports = db;
+module.exports = pool;
